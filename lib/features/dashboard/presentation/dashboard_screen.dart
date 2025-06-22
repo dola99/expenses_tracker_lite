@@ -8,6 +8,7 @@ import 'widgets/dashboard_balance_section.dart';
 import 'widgets/dashboard_income_section.dart';
 import 'widgets/dashboard_recent_expenses_section.dart';
 import 'widgets/dashboard_fab.dart';
+import 'widgets/export_import_card.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -28,15 +29,22 @@ class DashboardScreen extends StatelessWidget {
               // Income Card
               SliverToBoxAdapter(child: DashboardIncomeSection(state: state)),
 
+              // Export/Import Card
+              const SliverToBoxAdapter(child: ExportImportCard()),
+
               // Recent Expenses
               SliverToBoxAdapter(
                 child: DashboardRecentExpensesSection(state: state),
               ),
+
+              // Add some bottom padding to ensure FAB doesn't cover content
+              const SliverToBoxAdapter(child: SizedBox(height: 80)),
             ],
           );
         },
       ),
       floatingActionButton: const DashboardFAB(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

@@ -4,6 +4,8 @@ import 'widgets/expense_state_manager.dart';
 import 'widgets/expense_filters.dart';
 import 'widgets/expense_list_content.dart';
 import 'widgets/expenses_fab.dart';
+import '../../export/presentation/export_screen.dart';
+import '../../import/import_dialog.dart';
 
 class ExpensesListScreen extends StatelessWidget {
   final String? initialCategoryFilter;
@@ -72,6 +74,35 @@ class ExpensesListScreen extends StatelessWidget {
         ),
       ),
       centerTitle: true,
+      actions: [
+        // Export button
+        IconButton(
+          onPressed: () => _navigateToExport(context),
+          icon: const Icon(Icons.download, color: AppTheme.textDark, size: 24),
+          tooltip: 'Export Data',
+        ),
+        // Import button
+        IconButton(
+          onPressed: () => _showImportDialog(context),
+          icon: const Icon(
+            Icons.upload_file,
+            color: AppTheme.textDark,
+            size: 24,
+          ),
+          tooltip: 'Import Data',
+        ),
+        const SizedBox(width: 8),
+      ],
     );
+  }
+
+  void _navigateToExport(BuildContext context) {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => const ExportScreen()));
+  }
+
+  void _showImportDialog(BuildContext context) {
+    showDialog(context: context, builder: (context) => const ImportDialog());
   }
 }

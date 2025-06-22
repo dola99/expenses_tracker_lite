@@ -47,6 +47,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               SnackBar(
                 content: Text(state.message),
                 backgroundColor: AppTheme.successGreen,
+                behavior: SnackBarBehavior.fixed,
               ),
             );
             Navigator.of(context).pop();
@@ -55,6 +56,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               SnackBar(
                 content: Text(state.message),
                 backgroundColor: AppTheme.errorRed,
+                behavior: SnackBarBehavior.fixed,
               ),
             );
           }

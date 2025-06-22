@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:convert';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:csv/csv.dart';
@@ -401,6 +402,69 @@ class ExportService {
       );
     } catch (e) {
       throw Exception('Failed to export PDF: $e');
+    }
+  }
+
+  /// Export transactions to JSON format
+  static Future<void> exportToJSON({
+    List<ExpenseModel>? expenses,
+    List<IncomeModel>? incomes,
+  }) async {
+    try {
+      // Combine and sort transactions
+      List<TransactionData> transactions = [];
+
+      if (expenses != null) {
+        transactions.addAll(
+          expenses.map((e) => TransactionData.fromExpense(e)),
+        );
+      }
+
+      if (incomes != null) {
+        transactions.addAll(incomes.map((e) => TransactionData.fromIncome(e)));
+      }
+
+      transactions.sort((a, b) => b.date.compareTo(a.date));
+
+      // Prepare JSON data
+      List<Map<String, dynamic>> jsonData = [];
+
+      for (var transaction in transactions) {
+        jsonData.add({
+          'id': transaction.id,
+          'category': transaction.category,
+          'amount': transaction.amount,
+          'currency': transaction.currency,
+          'amountInUSD': transaction.amountInUSD,
+          'date': transaction.date.toIso8601String(),
+          'description': transaction.description,
+          'type': transaction.type,
+        });
+      }
+
+      // Convert to JSON string
+      String jsonString = const JsonEncoder.withIndent('  ').convert(jsonData);
+
+      // Get temporary directory
+      final directory = await getTemporaryDirectory();
+      final file = File(
+        path.join(
+          directory.path,
+          'transactions_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.json',
+        ),
+      );
+
+      // Write JSON data to file
+      await file.writeAsString(jsonString);
+
+      // Share the file
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        text: 'Transaction Report - JSON Export',
+        subject: 'Expense Tracker Export',
+      );
+    } catch (e) {
+      throw Exception('Failed to export JSON: $e');
     }
   }
 

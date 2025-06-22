@@ -9,6 +9,8 @@ import 'add_income_screen.dart';
 import 'widgets/income_summary_card.dart';
 import 'widgets/income_empty_state.dart';
 import 'widgets/income_grouped_list.dart';
+import '../../export/presentation/export_screen.dart';
+import '../../import/import_dialog.dart';
 
 class IncomeListScreen extends StatelessWidget {
   const IncomeListScreen({super.key});
@@ -75,6 +77,25 @@ class IncomeListView extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
       ),
+      actions: [
+        // Export button
+        IconButton(
+          onPressed: () => _navigateToExport(context),
+          icon: const Icon(Icons.download, color: AppTheme.textDark, size: 24),
+          tooltip: 'Export Data',
+        ),
+        // Import button
+        IconButton(
+          onPressed: () => _showImportDialog(context),
+          icon: const Icon(
+            Icons.upload_file,
+            color: AppTheme.textDark,
+            size: 24,
+          ),
+          tooltip: 'Import Data',
+        ),
+        const SizedBox(width: 8),
+      ],
     );
   }
 
@@ -160,6 +181,16 @@ class IncomeListView extends StatelessWidget {
       context,
       MaterialPageRoute(builder: (context) => AddIncomeScreen(income: income)),
     );
+  }
+
+  void _navigateToExport(BuildContext context) {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => const ExportScreen()));
+  }
+
+  void _showImportDialog(BuildContext context) {
+    showDialog(context: context, builder: (context) => const ImportDialog());
   }
 
   void _showDeleteDialog(BuildContext context, IncomeModel income) {

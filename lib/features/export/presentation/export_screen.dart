@@ -26,7 +26,7 @@ class _ExportScreenState extends State<ExportScreen>
   String _selectedFormat = 'PDF';
   String _selectedPeriod = 'All Time';
 
-  final List<String> _formats = ['PDF', 'CSV'];
+  final List<String> _formats = ['CSV', 'JSON'];
   final List<String> _periods = [
     'All Time',
     'This Month',
@@ -150,13 +150,10 @@ class _ExportScreenState extends State<ExportScreen>
       }
 
       // Export based on selected format
-      if (_selectedFormat == 'PDF') {
-        await ExportService.exportToPDF(
+      if (_selectedFormat == 'JSON') {
+        await ExportService.exportToJSON(
           expenses: expenses.isNotEmpty ? expenses : null,
           incomes: incomes.isNotEmpty ? incomes : null,
-          title: _getPeriodTitle(),
-          startDate: _startDate,
-          endDate: _endDate,
         );
       } else {
         await ExportService.exportToCSV(
@@ -170,7 +167,7 @@ class _ExportScreenState extends State<ExportScreen>
           SnackBar(
             content: Text('$_selectedFormat export completed successfully!'),
             backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
+            behavior: SnackBarBehavior.fixed,
           ),
         );
       }
@@ -180,7 +177,7 @@ class _ExportScreenState extends State<ExportScreen>
           SnackBar(
             content: Text('Export failed: ${e.toString()}'),
             backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
+            behavior: SnackBarBehavior.fixed,
           ),
         );
       }
@@ -193,19 +190,14 @@ class _ExportScreenState extends State<ExportScreen>
     }
   }
 
-  String _getPeriodTitle() {
-    if (_startDate != null && _endDate != null) {
-      return '${DateFormat('MMM dd').format(_startDate!)} - ${DateFormat('MMM dd, yyyy').format(_endDate!)}';
-    }
-    return _selectedPeriod;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Export Data'),
+        title: const Text('Export Data', style: TextStyle(color: Colors.black)),
         elevation: 0,
+        iconTheme: IconThemeData(color: Colors.black),
+        surfaceTintColor: Colors.black,
         backgroundColor: Colors.transparent,
       ),
       body: Padding(
@@ -250,7 +242,7 @@ class _ExportScreenState extends State<ExportScreen>
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Export your transactions as PDF or CSV files',
+                                'Export your transactions as CSV or JSON files',
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(color: Colors.grey[600]),
                               ),
@@ -316,8 +308,8 @@ class _ExportScreenState extends State<ExportScreen>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      format == 'PDF'
-                                          ? Icons.picture_as_pdf
+                                      format == 'JSON'
+                                          ? Icons.code
                                           : Icons.table_chart,
                                       color: isSelected
                                           ? Colors.white
@@ -507,8 +499,8 @@ class _ExportScreenState extends State<ExportScreen>
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    _selectedFormat == 'PDF'
-                        ? '• PDF format includes charts, summaries, and formatted tables\n• Best for reports and presentations\n• Includes category breakdown and visual elements'
+                    _selectedFormat == 'JSON'
+                        ? '• JSON format contains structured data in key-value pairs\n• Compatible with APIs, databases, and modern applications\n• Best for data integration and web applications'
                         : '• CSV format contains raw data in spreadsheet format\n• Compatible with Excel, Google Sheets, and other tools\n• Best for data analysis and further processing',
                     style: TextStyle(color: Colors.grey[600], height: 1.4),
                   ),

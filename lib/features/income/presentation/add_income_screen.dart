@@ -86,6 +86,7 @@ class _AddIncomeViewState extends State<AddIncomeView> {
                       : 'Income added successfully',
                 ),
                 backgroundColor: AppTheme.successGreen,
+                behavior: SnackBarBehavior.fixed,
               ),
             );
             Navigator.of(context).pop();
@@ -94,6 +95,7 @@ class _AddIncomeViewState extends State<AddIncomeView> {
               SnackBar(
                 content: Text(state.message),
                 backgroundColor: AppTheme.errorRed,
+                behavior: SnackBarBehavior.fixed,
               ),
             );
           }
